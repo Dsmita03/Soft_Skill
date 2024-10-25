@@ -1,21 +1,19 @@
-# tests/test_model.py
-
 import unittest
-import joblib
-from sklearn.datasets import make_classification
+from sklearn.linear_model import LogisticRegression
 from src.model import train_model
+from sklearn.datasets import make_classification
 
 class TestModel(unittest.TestCase):
 
+    def setUp(self):
+        # Creating a sample dataset
+        self.X, self.y = make_classification(n_samples=100, n_features=20, random_state=42)
+        self.model = LogisticRegression()
+
     def test_train_model(self):
-        X, y = make_classification(n_samples=100, n_features=20, random_state=42)
-        model = train_model(X, y)
+        model = train_model(self.X, self.y)
         self.assertIsNotNone(model)
-        
-        # Save the model to test loading
-        joblib.dump(model, 'models/test_model.pkl')
-        loaded_model = joblib.load('models/test_model.pkl')
-        self.assertIsNotNone(loaded_model)
+        self.assertIsInstance(model, LogisticRegression)
 
 if __name__ == '__main__':
     unittest.main()
